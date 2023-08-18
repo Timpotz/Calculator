@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header text-center">
+          Calculator
+        </div>
+        <div class="card-body" id="calculator">
+          <input type="text" id="result" class="form-control mb-2" readonly>
+          <div class="btn-group btn-group-lg btn-block">
+            <button class="btn btn-primary" onclick="appendNumber(7)">7</button>
+            <button class="btn btn-primary" onclick="appendNumber(8)">8</button>
+            <button class="btn btn-primary" onclick="appendNumber(9)">9</button>
+            <button class="btn btn-warning" onclick="appendOperator('+')">+</button>
+          </div>
+          <div class="btn-group btn-group-lg btn-block">
+            <button class="btn btn-primary" onclick="appendNumber(4)">4</button>
+            <button class="btn btn-primary" onclick="appendNumber(5)">5</button>
+            <button class="btn btn-primary" onclick="appendNumber(6)">6</button>
+            <button class="btn btn-warning" onclick="appendOperator('-')">-</button>
+          </div>
+          <div class="btn-group btn-group-lg btn-block">
+            <button class="btn btn-primary" onclick="appendNumber(1)">1</button>
+            <button class="btn btn-primary" onclick="appendNumber(2)">2</button>
+            <button class="btn btn-primary" onclick="appendNumber(3)">3</button>
+            <button class="btn btn-warning" onclick="appendOperator('*')">*</button>
+          </div>
+          <div class="btn-group btn-group-lg btn-block">
+            <button class="btn btn-primary" onclick="appendNumber(0)">0</button>
+            <button class="btn btn-warning" onclick="appendOperator('/')">/</button>
+            <button class="btn btn-danger" onclick="clearAll()">C</button>
+        
+            <button class="btn btn-secondary" onclick="appendOperator('+/-')">+/-</button>
+          </div>
+          <div class="btn-group btn-group-lg btn-block">
+            <button class="btn btn-success" onclick="calculate()">=</button>
+          </div>
+        </div>
+        <div class="card-footer text-center">
+          <button class="btn btn-dark" onclick="toggleNightMode()">Toggle Night Mode</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentInput = '';
+  let currentOperator = '';
+  let isNightMode = false;
+  
+  function appendNumber(num) {
+    currentInput += num;
+    updateDisplay();
+  }
+  
+  function appendOperator(operator) {
+    if (operator === '+/-') {
+      currentInput = eval('-(' + currentInput + ')').toString();
+    } else if (currentInput !== '') {
+      currentOperator = operator;
+      currentInput += operator;
+    }
+    updateDisplay();
+  }
+  
+  function calculate() {
+    if (currentInput !== '') {
+      try {
+        currentInput = eval(currentInput).toString();
+        updateDisplay();
+      } catch (error) {
+        currentInput = 'Error';
+        updateDisplay();
+      }
+    }
+  }
+  
+  function clearAll() {
+    currentInput = '';
+    currentOperator = '';
+    updateDisplay();
+  }
+  
+  function toggleNightMode() {
+    isNightMode = !isNightMode;
+    const calculator = document.getElementById('calculator');
+    if (isNightMode) {
+      calculator.classList.add('bg-dark');
+      calculator.classList.add('text-white');
+    } else {
+      calculator.classList.remove('bg-dark');
+      calculator.classList.remove('text-white');
+    }
+  }
+  
+  function updateDisplay() {
+    document.getElementById('result').value = currentInput;
+  }
+
+   // Handle keyboard input
+  document.addEventListener('keydown', function(event) {
+    const key = event.key;
+    if (!isNaN(key) || key === '.' || key === '+' || key === '-' || key === '*' || key === '/' || key === 'Enter') {
+      event.preventDefault();
+      if (key === 'Enter') {
+        calculate();
+      } else if (key === '+/-') {
+        appendOperator('+/-');
+      } else {
+        currentInput += key;
+        updateDisplay();
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
